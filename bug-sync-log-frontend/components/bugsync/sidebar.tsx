@@ -1,7 +1,8 @@
 "use client"
 
+import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { Bug, KanbanSquare, SplitSquareHorizontal, Inbox } from "lucide-react"
+import { Bug, KanbanSquare, SplitSquareHorizontal, Inbox, LifeBuoy, ArrowUpRight } from "lucide-react"
 
 export type ScreenId = "triage" | "planning" | "kanban"
 
@@ -82,9 +83,22 @@ export function Sidebar({
         })}
       </nav>
 
-      <div className="hidden border-t border-sidebar-border p-3 md:block">
-        <p className="text-pretty text-xs leading-relaxed text-muted-foreground">
-          Triage fast, commit deliberately, ship calmly. No clutter.
+      <div className="border-t border-sidebar-border p-2 md:p-3">
+        <Link
+          href="/portal"
+          className="group flex items-center gap-3 rounded-lg px-2.5 py-2.5 text-left text-muted-foreground transition-colors hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+        >
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-secondary text-foreground md:size-8">
+            <LifeBuoy className="size-4.5 md:size-4" />
+          </span>
+          <span className="hidden flex-1 md:block">
+            <span className="block text-sm font-medium leading-tight">Customer Portal</span>
+            <span className="block text-xs text-muted-foreground">Public help center</span>
+          </span>
+          <ArrowUpRight className="hidden size-4 text-muted-foreground md:block" />
+        </Link>
+        <p className="mt-2 hidden text-pretty px-1 text-xs leading-relaxed text-muted-foreground md:block">
+          Triage fast, commit deliberately, ship calmly.
         </p>
       </div>
     </aside>

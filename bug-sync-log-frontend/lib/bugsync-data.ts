@@ -1,5 +1,9 @@
 export type Urgency = "blocker" | "critical" | "minor"
-export type Status = "todo" | "in-progress" | "review" | "done"
+
+// Status is now freeform text to support configurable workflows.
+// These are the recommended statuses but not a hard constraint.
+export type Status = string
+
 export type Location = "triage" | "sprint"
 
 export type User = {
@@ -12,6 +16,7 @@ export type Bug = {
   id: string
   title: string
   urgency: Urgency
+  priority: string
   upvotes: number
   environment: string
   filePath: string
@@ -37,14 +42,25 @@ export const TEAM: User[] = [
 
 export const ASSIGNEES = ["Unassigned", ...TEAM.map((u) => u.name)]
 
-export const STATUS_LABELS: Record<Status, string> = {
-  todo: "To Do",
+export const STATUS_LABELS: Record<string, string> = {
+  open: "Open",
+  confirmed: "Confirmed",
   "in-progress": "In Progress",
-  review: "Under Review",
-  done: "Done",
+  "needs-review": "Needs Review",
+  fixed: "Fixed",
+  closed: "Closed",
+  rejected: "Rejected",
+  duplicate: "Duplicate",
 }
 
-export const URGENCY_LABELS: Record<Urgency, string> = {
+export const PRIORITY_LABELS: Record<string, string> = {
+  low: "Low",
+  medium: "Medium",
+  high: "High",
+  critical: "Critical",
+}
+
+export const URGENCY_LABELS: Record<string, string> = {
   blocker: "Blocker",
   critical: "Critical",
   minor: "Minor",
@@ -55,13 +71,14 @@ export const BUGS: Bug[] = [
     id: "BUG-412",
     title: "Checkout fails with 500 when applying expired promo code",
     urgency: "blocker",
+    priority: "critical",
     upvotes: 47,
     environment: "Production",
     filePath: "src/routes/api/checkout.ts",
     reportedAt: "Jun 14",
     creator: TEAM[0],
     assignee: null,
-    status: "todo",
+    status: "open",
     location: "triage",
     stepsToReproduce:
       "1. Add any item to the cart.\n2. Proceed to checkout.\n3. Enter the promo code `SUMMER20` (expired yesterday).\n4. Click \"Apply\".",
@@ -75,13 +92,14 @@ export const BUGS: Bug[] = [
     id: "BUG-398",
     title: "Session token not refreshed, users randomly logged out",
     urgency: "blocker",
+    priority: "critical",
     upvotes: 38,
     environment: "Production",
     filePath: "src/lib/auth/session.ts",
     reportedAt: "Jun 13",
     creator: TEAM[1],
     assignee: null,
-    status: "todo",
+    status: "open",
     location: "triage",
     stepsToReproduce:
       "1. Log in and stay idle for ~15 minutes.\n2. Perform any authenticated action.",
@@ -95,13 +113,14 @@ export const BUGS: Bug[] = [
     id: "BUG-401",
     title: "Dashboard charts overflow container on tablet breakpoints",
     urgency: "critical",
+    priority: "high",
     upvotes: 21,
     environment: "Staging",
     filePath: "src/components/dashboard/charts.tsx",
     reportedAt: "Jun 12",
     creator: TEAM[2],
     assignee: null,
-    status: "todo",
+    status: "open",
     location: "triage",
     stepsToReproduce: "1. Open the dashboard.\n2. Resize the viewport to ~820px wide.",
     expected: "Charts should scale down and stay within the card boundary.",
@@ -114,13 +133,14 @@ export const BUGS: Bug[] = [
     id: "BUG-377",
     title: "Search returns stale results after rapid typing",
     urgency: "critical",
+    priority: "high",
     upvotes: 19,
     environment: "Production",
     filePath: "src/hooks/use-search.ts",
     reportedAt: "Jun 10",
     creator: TEAM[3],
     assignee: null,
-    status: "todo",
+    status: "open",
     location: "triage",
     stepsToReproduce: "1. Type a query quickly.\n2. Delete it and type a new query.",
     expected: "Only the latest query's results are shown.",
@@ -133,13 +153,14 @@ export const BUGS: Bug[] = [
     id: "BUG-355",
     title: "Avatar upload accepts files over 10MB without warning",
     urgency: "minor",
+    priority: "medium",
     upvotes: 6,
     environment: "Staging",
     filePath: "src/components/profile/avatar-upload.tsx",
     reportedAt: "Jun 8",
     creator: TEAM[4],
     assignee: null,
-    status: "todo",
+    status: "open",
     location: "triage",
     stepsToReproduce: "1. Open profile settings.\n2. Upload a 15MB image.",
     expected: "Reject the file with a clear size-limit message.",
@@ -152,13 +173,14 @@ export const BUGS: Bug[] = [
     id: "BUG-340",
     title: "Tooltip clips behind modal overlay on first open",
     urgency: "minor",
+    priority: "low",
     upvotes: 3,
     environment: "Local",
     filePath: "src/components/ui/tooltip.tsx",
     reportedAt: "Jun 6",
     creator: TEAM[0],
     assignee: null,
-    status: "todo",
+    status: "open",
     location: "triage",
     stepsToReproduce: "1. Open a modal.\n2. Hover a tooltip trigger inside it.",
     expected: "Tooltip floats above the modal.",
@@ -170,13 +192,14 @@ export const BUGS: Bug[] = [
     id: "BUG-419",
     title: "Webhook retries duplicate orders under high load",
     urgency: "critical",
+    priority: "high",
     upvotes: 27,
     environment: "Production",
     filePath: "src/routes/api/webhooks/stripe.ts",
     reportedAt: "Jun 15",
     creator: TEAM[1],
     assignee: null,
-    status: "todo",
+    status: "open",
     location: "triage",
     stepsToReproduce: "1. Trigger a Stripe webhook.\n2. Force a timeout so Stripe retries.",
     expected: "Idempotency key prevents a duplicate order.",
