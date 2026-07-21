@@ -2,6 +2,8 @@ import { betterAuth } from "better-auth"
 import { pool } from "@/lib/db"
 import { nextCookies } from "better-auth/next-js"
 
+const isProduction = process.env.NODE_ENV === "production"
+
 export const auth = betterAuth({
   database: pool,
   baseURL:
@@ -17,12 +19,24 @@ export const auth = betterAuth({
   },
   trustedOrigins: [
     "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://192.168.8.123:3000",
+    ...(process.env.BETTER_AUTH_URL
+      ? [process.env.BETTER_AUTH_URL]
+      : []),
   ],
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 days
     updateAge: 60 * 60 * 24, // 1 day
+  },
+  advanced: {
+    useSecureCookies: isProduction,
+    cookies: {
+      session_token: {
+        attributes: {
+          sameSite: "lax",
+          secure: isProduction,
+        },
+      },
+    },
   },
   plugins: [nextCookies()],
 })
