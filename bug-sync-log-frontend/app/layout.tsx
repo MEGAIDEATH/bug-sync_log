@@ -13,7 +13,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'BugSync Log',
   description: 'A lightweight, bug-first project management workspace.',
-  generator: 'v0.app',
   icons: {
     icon: [
       {

@@ -123,7 +123,7 @@ export async function toggleVote(projectId: number, slug: string, bugId: number)
 /** Comments for a bug. Internal notes are hidden from plain users. */
 export async function getComments(projectId: number, bugId: number) {
   const { user } = await requireProjectAccess(projectId, "bug.comment")
-  const role = await getUserRole(projectId, user.id)
+  const role = (await getUserRole(projectId, user.id)) ?? ""
   const canSeeInternal = hasPermission(role, "bug.addInternalNote")
 
   const rows = await db

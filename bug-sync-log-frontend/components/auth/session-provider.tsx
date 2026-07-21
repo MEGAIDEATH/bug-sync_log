@@ -2,10 +2,9 @@
 
 import { createContext, useContext, type ReactNode } from "react"
 import { useSession } from "@/lib/auth-client"
-import type { Session } from "better-auth"
 
 type SessionContextValue = {
-  session: Session | null
+  session: { user: { id: string; name: string; email: string } } | null
   isPending: boolean
 }
 
