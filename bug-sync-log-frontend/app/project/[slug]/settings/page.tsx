@@ -1,5 +1,6 @@
 import { getProjectBySlug, getSessionUser, getUserRole } from "@/lib/rbac"
 import { redirect } from "next/navigation"
+import { getProjectPeople } from "@/app/actions/projects"
 import { SettingsClient } from "./settings-client"
 
 type Props = {
@@ -18,6 +19,8 @@ export default async function SettingsPage({ params }: Props) {
   const role = await getUserRole(project.id, user.id)
   if (!role || role !== "admin") redirect(`/project/${slug}`)
 
+  const { people, invites } = await getProjectPeople(project.id)
+
   return (
     <SettingsClient
       project={{
@@ -31,6 +34,8 @@ export default async function SettingsPage({ params }: Props) {
         archived: project.archived,
         createdAt: project.createdAt,
       }}
+      people={people}
+      invites={invites}
     />
   )
 }

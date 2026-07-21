@@ -1,11 +1,13 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { signIn } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { Bug } from "lucide-react"
 
 export function SignInForm() {
+  const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
@@ -20,6 +22,9 @@ export function SignInForm() {
       const result = await signIn.email({ email, password })
       if (result?.error) {
         setError(result.error.message ?? "Invalid credentials")
+      } else {
+        router.push("/")
+        router.refresh()
       }
     } catch {
       setError("An unexpected error occurred")

@@ -59,16 +59,16 @@ export function BoardClient({ project, bugs: initialBugs, projectId, currentUser
     setBugs((prev) => prev.map((b) => (b.id === id ? { ...b, ...patch } : b)))
   }, [])
 
-  const handleStatusChange = async (bugId: number, newStatus: string) => {
+  const handleStatusChange = useCallback(async (bugId: number, newStatus: string) => {
     try {
       await updateBugStatus(projectId, project.slug, bugId, newStatus)
       updateBug(bugId, { status: newStatus })
     } catch {
       // silently fail
     }
-  }
+  }, [projectId, project.slug, updateBug])
 
-  const handleVote = async (bugId: number) => {
+  const handleVote = useCallback(async (bugId: number) => {
     try {
       await toggleVote(projectId, project.slug, bugId)
       setBugs((prev) =>
@@ -81,7 +81,7 @@ export function BoardClient({ project, bugs: initialBugs, projectId, currentUser
     } catch {
       // silently fail
     }
-  }
+  }, [projectId, project.slug])
 
   // Transform to the format expected by existing workspace components
   const workspaceBugs: PortalBug[] = useMemo(() =>

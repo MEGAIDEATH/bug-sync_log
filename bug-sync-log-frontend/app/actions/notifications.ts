@@ -3,7 +3,7 @@
 import { db } from "@/lib/db"
 import { notification } from "@/lib/db/schema"
 import { getSessionUser, requireUserId } from "@/lib/rbac"
-import { and, desc, eq } from "drizzle-orm"
+import { and, desc, eq, sql } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
 
 /** Get all notifications for the current user. */
@@ -25,7 +25,7 @@ export async function getUnreadCount() {
   if (!user) return 0
 
   const [result] = await db
-    .select({ count: db.$count(notification, and(eq(notification.userId, user.id), eq(notification.read, false))) })
+    .select({ count: sql<number>`count(*)::int` })
     .from(notification)
     .where(and(eq(notification.userId, user.id), eq(notification.read, false)))
 
