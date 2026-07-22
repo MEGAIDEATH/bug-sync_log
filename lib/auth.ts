@@ -20,11 +20,16 @@ export const auth = betterAuth({
     autoSignIn: true,
   },
   trustedOrigins: [
-    "http://localhost:3000",
-    ...(process.env.BETTER_AUTH_URL
-      ? [process.env.BETTER_AUTH_URL]
-      : []),
-  ],
+  "http://localhost:3000",
+
+  ...(process.env.VERCEL_URL
+    ? [`https://${process.env.VERCEL_URL}`]
+    : []),
+
+  ...(process.env.BETTER_AUTH_URL
+    ? [process.env.BETTER_AUTH_URL]
+    : []),
+],
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 days
     updateAge: 60 * 60 * 24, // 1 day
